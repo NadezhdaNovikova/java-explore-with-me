@@ -1,2 +1,4 @@
-# java-explore-with-me
-Template repository for ExploreWithMe project.
+# Explore With Me ("Исследуй со мной") 
+Дипломная работа на курсе Java-разработчик Яндекс-Практикума (3 когорта).
+
+
