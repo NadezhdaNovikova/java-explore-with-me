@@ -19,6 +19,8 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiError handleEntityNotFoundException(final EntityNotFoundException e) {
+        log.info("EntityNotFoundException. Объект не найден {}, статус {}", e.getStackTrace(),
+                HttpStatus.CONFLICT);
         return new ApiError(null,
                 e.getMessage(),
                 "The required object was not found.",

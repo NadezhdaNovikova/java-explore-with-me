@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +26,11 @@ import javax.validation.constraints.Positive;
 public class CategoryAdminController {
 
     private final CategoryService categoryService;
+
+    @GetMapping
+    public String test() {
+        return "Connect with Main Server";
+    }
 
     @PatchMapping()
     public CategoryDto update(@Valid @RequestBody CategoryDto categoryDto) {
