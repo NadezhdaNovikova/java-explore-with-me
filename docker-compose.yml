@@ -18,8 +18,6 @@ services:
     container_name: stats-db
     ports:
       - "6541:5432"
-    volumes:
-      - /var/lib/postgresql/data/
     environment:
       - POSTGRES_DB=ewm_stats_db
       - POSTGRES_USER=ewm
@@ -44,8 +42,6 @@ services:
     image: postgres:14-alpine
     ports:
       - "5470:5432"
-    volumes:
-      - /var/lib/postgresql/data/
     environment:
       - POSTGRES_DB=ewm_main_db
       - POSTGRES_USER=ewm

@@ -1,6 +1,7 @@
 package ru.practicum.main_server.utils;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import ru.practicum.main_server.entity.Category;
 import ru.practicum.main_server.entity.Compilation;
 import ru.practicum.main_server.entity.Event;
@@ -15,6 +16,7 @@ import ru.practicum.main_server.repository.ParticipationRepository;
 import ru.practicum.main_server.repository.UserRepository;
 
 @RequiredArgsConstructor
+@Component
 public class CheckEntity {
 
     private final UserRepository userRepository;

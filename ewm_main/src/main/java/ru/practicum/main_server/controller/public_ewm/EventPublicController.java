@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.main_server.dto.EventFullDto;
 import ru.practicum.main_server.dto.EventShortDto;
 import ru.practicum.main_server.service.EventService;
-import ru.practicum.main_server.utils.EventStats;
 import ru.practicum.main_server.utils.PublicEventSearchParams;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +26,6 @@ import java.util.List;
 public class EventPublicController {
 
     private final EventService eventService;
-    private final EventStats statClient;
 
     @GetMapping()
     List<EventShortDto> getAllPublic(@RequestParam(name = "text", required = false) String text,
@@ -43,7 +41,7 @@ public class EventPublicController {
                                      @Positive @RequestParam(name = "size", defaultValue = "10")
                                      Integer size, HttpServletRequest request) {
         log.info("Public access: get events");
-        statClient.sendHitStat(request);
+        eventService.sendHitStat(request);
         return eventService
                 .getAllPublic(new PublicEventSearchParams(
                         text,
@@ -61,7 +59,7 @@ public class EventPublicController {
     @GetMapping("/{id}")
     EventFullDto getById(@Positive @PathVariable("id") long id, HttpServletRequest request) {
         log.info("Public access: get event id = {}", id);
-        statClient.sendHitStat(request);
+        eventService.sendHitStat(request);
         return eventService.getById(id);
     }
 }

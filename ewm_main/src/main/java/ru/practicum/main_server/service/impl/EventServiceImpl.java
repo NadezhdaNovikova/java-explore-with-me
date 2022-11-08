@@ -2,10 +2,15 @@ package ru.practicum.main_server.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.Constant;
+import ru.practicum.dto.stats.EndpointHit;
+import ru.practicum.dto.stats.ViewStats;
 import ru.practicum.main_server.dto.AdminUpdateEventRequest;
 import ru.practicum.main_server.dto.EventFullDto;
 import ru.practicum.main_server.dto.EventShortDto;
@@ -26,9 +31,10 @@ import ru.practicum.main_server.repository.ParticipationRepository;
 import ru.practicum.main_server.service.EventService;
 import ru.practicum.main_server.utils.AdminEventSearchParams;
 import ru.practicum.main_server.utils.CheckEntity;
-import ru.practicum.main_server.utils.EventStats;
 import ru.practicum.main_server.utils.PublicEventSearchParams;
+import ru.practicum.stats_client.HitClient;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -45,8 +51,12 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final ParticipationRepository participationRepository;
     private final LocationRepository locationRepository;
-    private final EventStats statClient;
     private final CheckEntity check;
+    @Autowired
+    private final HitClient hitClient;
+
+    @Value("${app.name}")
+    String app;
 
     @Transactional
     @Override
@@ -263,7 +273,7 @@ public class EventServiceImpl implements EventService {
         int confirmedRequests = participationRepository
                 .countByEventIdAndStatus(eventShortDto.getId(), StatusRequest.CONFIRMED);
         eventShortDto.setConfirmedRequests(confirmedRequests);
-        eventShortDto.setViews(statClient.getViewsById(eventShortDto.getId()));
+        eventShortDto.setViews(getViewsById(eventShortDto.getId()));
         return eventShortDto;
     }
 
@@ -271,7 +281,7 @@ public class EventServiceImpl implements EventService {
         int confirmedRequests = participationRepository
                 .countByEventIdAndStatus(eventFullDto.getId(), StatusRequest.CONFIRMED);
         eventFullDto.setConfirmedRequests(confirmedRequests);
-        eventFullDto.setViews(statClient.getViewsById(eventFullDto.getId()));
+        eventFullDto.setViews(getViewsById(eventFullDto.getId()));
         return eventFullDto;
     }
 
@@ -313,5 +323,35 @@ public class EventServiceImpl implements EventService {
 
         Optional.ofNullable(title)
                 .ifPresent(event::setTitle);
+    }
+
+    public int getViewsById(Long eventId) {
+        Event event = check.checkAndGetEvent(eventId);
+        String start = event.getCreatedOn().format(Constant.DATE_TIME_FORMATTER);
+        String end = LocalDateTime.now().format(Constant.DATE_TIME_FORMATTER);
+        ResponseEntity<Object> responseEntity = hitClient.getStats(
+                start,
+                end,
+                new String[]{"/events/" + eventId},
+                false);
+
+        List<ViewStats> statsList = (List<ViewStats>) responseEntity.getBody();
+        log.info("responseEntity {}", statsList);
+        if (statsList != null && !statsList.isEmpty()) {
+            return statsList.stream().findFirst().get().getHits();
+        }
+        return 0;
+    }
+
+    @Override
+    public void sendHitStat(HttpServletRequest request) {
+        log.info("Request URL {}", request.getRequestURI());
+        EndpointHit endpointHit = new EndpointHit(
+                0L,
+                app,
+                request.getRequestURI(),
+                request.getRemoteAddr(),
+                LocalDateTime.now());
+        hitClient.saveHit(endpointHit);
     }
 }

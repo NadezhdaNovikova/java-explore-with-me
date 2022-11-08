@@ -1,4 +1,4 @@
-package com.example.demo;
+package ru.practicum.main_server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class EWMMainService {
 
     public static void main(String[] args) {
-        SpringApplication.run(com.example.demo.EWMMainService.class, args);
+        SpringApplication.run(EWMMainService.class, args);
     }
 
 }

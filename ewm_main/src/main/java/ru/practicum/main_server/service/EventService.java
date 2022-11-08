@@ -9,6 +9,7 @@ import ru.practicum.main_server.dto.UpdateEventRequest;
 import ru.practicum.main_server.utils.AdminEventSearchParams;
 import ru.practicum.main_server.utils.PublicEventSearchParams;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface EventService {
@@ -44,4 +45,6 @@ public interface EventService {
 
     //Private: Получение полной информации о событии добавленном текущим пользователем
     EventFullDto getUserEvent(Long userId, Long eventId);
+
+    void sendHitStat(HttpServletRequest request);
 }
