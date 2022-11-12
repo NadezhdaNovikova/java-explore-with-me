@@ -1,8 +1,8 @@
 package ru.practicum.main_server.service;
 
 import org.springframework.data.domain.PageRequest;
-import ru.practicum.main_server.dto.CategoryDto;
-import ru.practicum.main_server.dto.NewCategoryDto;
+import ru.practicum.main_server.dto.category.CategoryDto;
+import ru.practicum.main_server.dto.category.NewCategoryDto;
 
 import java.util.List;
 

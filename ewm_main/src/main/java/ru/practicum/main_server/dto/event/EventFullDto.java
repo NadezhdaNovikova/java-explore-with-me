@@ -1,11 +1,13 @@
-package ru.practicum.main_server.dto;
+package ru.practicum.main_server.dto.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.practicum.main_server.entity.Location;
+import ru.practicum.main_server.dto.category.CategoryDto;
+import ru.practicum.main_server.dto.location.LocationShortDto;
+import ru.practicum.main_server.dto.user.UserShortDto;
 
 import javax.validation.constraints.NotBlank;
 
@@ -51,7 +53,7 @@ public class EventFullDto {
     private String publishedOn;
 
     @NotBlank
-    private Location location;
+    private LocationShortDto location;
 
     private boolean requestModeration;
 }

@@ -1,4 +1,4 @@
-package ru.practicum.main_server.dto;
+package ru.practicum.main_server.dto.compilation;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,16 +7,21 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryDto {
+public class NewCompilationDto {
 
-    @NotNull
-    private Long id;
+    private List<Long> events;
 
     @NotBlank
-    private String name;
+    @Size(max = 254)
+    private String title;
+
+    @NotNull
+    private Boolean pinned;
 }

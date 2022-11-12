@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.main_server.dto.CompilationDto;
-import ru.practicum.main_server.dto.NewCompilationDto;
+import ru.practicum.main_server.dto.compilation.CompilationDto;
+import ru.practicum.main_server.dto.compilation.NewCompilationDto;
 import ru.practicum.main_server.service.CompilationService;
 
 import javax.validation.Valid;

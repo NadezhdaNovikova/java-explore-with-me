@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.main_server.dto.category.CategoryDto;
-import ru.practicum.main_server.service.CategoryService;
+import ru.practicum.main_server.dto.type.TypeDto;
+import ru.practicum.main_server.service.TypeService;
 
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
@@ -20,23 +20,23 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Validated
-@RequestMapping(path = "/categories")
-public class CategoryPublicController {
+@RequestMapping(path = "/locations/types")
+public class TypePublicController {
 
-    private final CategoryService categoryService;
+    private final TypeService typeService;
 
     @GetMapping
-    List<CategoryDto> getAllPublic(@PositiveOrZero @RequestParam(name = "from", defaultValue = "0")
+    List<TypeDto> getAllPublic(@PositiveOrZero @RequestParam(name = "from", defaultValue = "0")
                                    Integer from,
-                                   @Positive @RequestParam(name = "size", defaultValue = "10")
+                               @Positive @RequestParam(name = "size", defaultValue = "10")
                                    Integer size) {
-        log.info("Public access: get categories");
-        return categoryService.getAllPublic(PageRequest.of(from / size, size));
+        log.info("Public access: get location types");
+        return typeService.getAllPublic(PageRequest.of(from / size, size));
     }
 
-    @GetMapping("/{catId}")
-    CategoryDto getById(@Positive @PathVariable("catId") long catId) {
-        log.info("Public access: get category by id = {}", catId);
-        return categoryService.getById(catId);
+    @GetMapping("/{typeId}")
+    TypeDto getById(@Positive @PathVariable("typeId") long typeId) {
+        log.info("Public access: get location type by id = {}", typeId);
+        return typeService.getById(typeId);
     }
 }
