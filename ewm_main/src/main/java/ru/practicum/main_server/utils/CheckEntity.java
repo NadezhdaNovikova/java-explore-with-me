@@ -2,6 +2,7 @@ package ru.practicum.main_server.utils;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.practicum.ewm_utils.Constant;
 import ru.practicum.main_server.dto.mapper.TypeMapper;
 import ru.practicum.main_server.dto.type.NewTypeDto;
 import ru.practicum.main_server.entity.Category;
@@ -32,8 +33,6 @@ public class CheckEntity {
     private final ParticipationRepository participationRepository;
     private final LocationRepository locationRepository;
     private final TypeRepository typeRepository;
-
-    private final static String DEFAULT_TYPE_NAME = "UNKNOWN STATE";
 
     public User checkAndGetUser(long id) {
         return userRepository.findById(id).orElseThrow(() ->
@@ -86,10 +85,10 @@ public class CheckEntity {
     public Type getLocationType(long typeIn) {
         Type type;
         if (typeIn == 0) {
-            if (typeRepository.findTypeByName(DEFAULT_TYPE_NAME).isPresent()) {
-                type = typeRepository.findTypeByName(DEFAULT_TYPE_NAME).get();
+            if (typeRepository.findTypeByName(Constant.DEFAULT_TYPE_NAME).isPresent()) {
+                type = typeRepository.findTypeByName(Constant.DEFAULT_TYPE_NAME).get();
             } else {
-                type = typeRepository.save(TypeMapper.toType(new NewTypeDto(DEFAULT_TYPE_NAME)));
+                type = typeRepository.save(TypeMapper.toType(new NewTypeDto(Constant.DEFAULT_TYPE_NAME)));
             }
         } else {
             type = checkAndGetType(typeIn);
