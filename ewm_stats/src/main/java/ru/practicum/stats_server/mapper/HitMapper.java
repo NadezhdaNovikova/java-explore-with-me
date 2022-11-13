@@ -8,13 +8,13 @@ import ru.practicum.stats_server.entity.HitModel;
 public class HitMapper {
 
     public static HitModel toHitModel(EndpointHit hit) {
-        return new HitModel(
-                hit.getId(),
-                hit.getApp(),
-                hit.getUri(),
-                hit.getIp(),
-                hit.getTimestamp()
-        );
+        return HitModel.builder()
+                .id(hit.getId())
+                .app(hit.getApp())
+                .uri(hit.getUri())
+                .ip(hit.getIp())
+                .timestamp(hit.getTimestamp())
+                .build();
     }
 
     public static EndpointHit toEndpointHit(HitModel hitModel) {

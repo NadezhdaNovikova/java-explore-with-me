@@ -2,9 +2,9 @@ package ru.practicum.main_server.dto.mapper;
 
 import lombok.experimental.UtilityClass;
 import ru.practicum.ewm_utils.Constant;
-import ru.practicum.main_server.dto.EventFullDto;
-import ru.practicum.main_server.dto.EventShortDto;
-import ru.practicum.main_server.dto.NewEventDto;
+import ru.practicum.main_server.dto.event.EventFullDto;
+import ru.practicum.main_server.dto.event.EventShortDto;
+import ru.practicum.main_server.dto.event.NewEventDto;
 import ru.practicum.main_server.entity.Category;
 import ru.practicum.main_server.entity.Event;
 import ru.practicum.main_server.entity.Location;
@@ -46,7 +46,7 @@ public class EventMapper {
                 .createdOn(event.getCreatedOn().format(Constant.DATE_TIME_FORMATTER))
                 .publishedOn(event.getPublishedOn() == null ? null : event.getPublishedOn()
                         .format(Constant.DATE_TIME_FORMATTER))
-                .location(event.getLocation())
+                .location(LocationMapper.toLocationShortDto(event.getLocation()))
                 .requestModeration(event.isRequestModeration())
                 .build();
     }

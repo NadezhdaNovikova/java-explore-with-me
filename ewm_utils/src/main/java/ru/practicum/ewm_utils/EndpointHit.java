@@ -16,12 +16,16 @@ import java.time.LocalDateTime;
 public class EndpointHit {
 
     Long id;
+
     @NotNull
     private String app;
+
     @NotNull
     private String uri;
+
     @NotNull
     private String ip;
+
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constant.DATE_TIME_STRING)
     private LocalDateTime timestamp;

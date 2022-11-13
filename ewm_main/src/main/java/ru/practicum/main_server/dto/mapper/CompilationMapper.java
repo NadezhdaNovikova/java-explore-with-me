@@ -1,9 +1,9 @@
 package ru.practicum.main_server.dto.mapper;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.main_server.dto.CompilationDto;
-import ru.practicum.main_server.dto.EventShortDto;
-import ru.practicum.main_server.dto.NewCompilationDto;
+import ru.practicum.main_server.dto.compilation.CompilationDto;
+import ru.practicum.main_server.dto.compilation.NewCompilationDto;
+import ru.practicum.main_server.dto.event.EventShortDto;
 import ru.practicum.main_server.entity.Compilation;
 import ru.practicum.main_server.entity.Event;
 

@@ -1,8 +1,8 @@
 package ru.practicum.main_server.service;
 
 import org.springframework.data.domain.PageRequest;
-import ru.practicum.main_server.dto.CompilationDto;
-import ru.practicum.main_server.dto.NewCompilationDto;
+import ru.practicum.main_server.dto.compilation.CompilationDto;
+import ru.practicum.main_server.dto.compilation.NewCompilationDto;
 
 import java.util.List;
 

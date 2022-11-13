@@ -1,9 +1,11 @@
-package ru.practicum.main_server.dto;
+package ru.practicum.main_server.dto.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.practicum.main_server.dto.category.CategoryDto;
+import ru.practicum.main_server.dto.user.UserShortDto;
 
 import javax.validation.constraints.NotBlank;
 

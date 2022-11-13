@@ -7,15 +7,20 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm_utils.Constant;
-import ru.practicum.main_server.dto.AdminUpdateEventRequest;
-import ru.practicum.main_server.dto.EventFullDto;
-import ru.practicum.main_server.dto.EventShortDto;
-import ru.practicum.main_server.dto.NewEventDto;
-import ru.practicum.main_server.dto.UpdateEventRequest;
+import ru.practicum.main_server.dto.event.AdminUpdateEventRequest;
+import ru.practicum.main_server.dto.event.EventFullDto;
+import ru.practicum.main_server.dto.event.EventShortDto;
+import ru.practicum.main_server.dto.event.NewEventDto;
+import ru.practicum.main_server.dto.event.UpdateEventRequest;
+import ru.practicum.main_server.dto.location.NewLocationDto;
 import ru.practicum.main_server.dto.mapper.EventMapper;
+import ru.practicum.main_server.dto.mapper.LocationMapper;
+import ru.practicum.main_server.dto.mapper.TypeMapper;
+import ru.practicum.main_server.dto.type.NewTypeDto;
 import ru.practicum.main_server.entity.Category;
 import ru.practicum.main_server.entity.Event;
 import ru.practicum.main_server.entity.Location;
+import ru.practicum.main_server.entity.Type;
 import ru.practicum.main_server.entity.User;
 import ru.practicum.main_server.entity.enums.SortParam;
 import ru.practicum.main_server.entity.enums.State;
@@ -81,14 +86,7 @@ public class EventServiceImpl implements EventService {
             event.setEventDate(LocalDateTime.parse(eventUpdateDto.getEventDate(),
                     Constant.DATE_TIME_FORMATTER));
         }
-
-        if (eventUpdateDto.getLocation() != null) {
-            float lat = eventUpdateDto.getLocation().getLat();
-            float lon = eventUpdateDto.getLocation().getLon();
-            Location location = locationRepository.findLocationByLatAndLon(lat, lon)
-                    .orElse(locationRepository.save(new Location(0L, lat, lon)));
-            event.setLocation(location);
-        }
+        event.setLocation(checkEventLocation(event));
 
         Optional.ofNullable(eventUpdateDto.getRequestModeration())
                 .ifPresent(event::setRequestModeration);
@@ -198,24 +196,14 @@ public class EventServiceImpl implements EventService {
                 params.getRangeStart(), params.getRangeEnd(), params.getPage());
 
         SortParam sort = params.getSort();
-        if (params.getSort().equals(SortParam.EVENT_DATE)) {
+        if (sort.equals(SortParam.EVENT_DATE)) {
             events = events.stream()
                     .sorted(Comparator.comparing(Event::getEventDate))
                     .collect(Collectors.toList());
         }
 
-        List<EventShortDto> eventShortDtos = events.stream()
-                .filter(event -> event.getState().equals(State.PUBLISHED))
-                .map(EventMapper::toEventShortDto)
-                .map(viewsConfirmed::setConfirmedRequestsAndViewsEventShortDto)
-                .collect(Collectors.toList());
-
-        if (sort.equals(SortParam.VIEWS)) {
-            eventShortDtos = eventShortDtos.stream()
-                    .sorted(Comparator.comparing(EventShortDto::getViews))
-                    .collect(Collectors.toList());
-        }
-        if (params.getOnlyAvailable()) {
+        List<EventShortDto> eventShortDtos = getSortedList(events, sort);
+        if (Boolean.TRUE.equals(params.getOnlyAvailable())) {
             eventShortDtos = eventShortDtos.stream()
                     .filter(eventShortDto -> eventShortDto.getConfirmedRequests()
                             <= check.checkAndGetEvent(eventShortDto.getId()).getParticipantLimit())
@@ -242,8 +230,29 @@ public class EventServiceImpl implements EventService {
         Category category = check.checkAndGetCategory(newEventDto.getCategory());
         float lat = newEventDto.getLocation().getLat();
         float lon = newEventDto.getLocation().getLon();
-        Location location = locationRepository.findLocationByLatAndLon(lat, lon)
-                .orElse(locationRepository.save(new Location(0L, lat, lon)));
+        Location location = new Location();
+
+        if (locationRepository.findLocationByLatAndLon(lat, lon).isPresent()) {
+            location = locationRepository.findLocationByLatAndLon(lat, lon).get();
+        } else {
+            NewLocationDto newLocation = newEventDto.getLocation();
+
+            Optional.ofNullable(newLocation.getName())
+                    .ifPresent(location::setName);
+            Optional.ofNullable(newLocation.getDescription())
+                    .ifPresent(location::setDescription);
+            Optional.of(newLocation.getRadius())
+                    .ifPresent(location::setRadius);
+
+            long typeIn = newLocation.getType();
+            Type type = check.getLocationType(typeIn);
+            location = LocationMapper.toLocation(newLocation, type);
+
+        }
+
+        Event event = EventMapper.toEvent(newEventDto, user, category, location);
+        event.setLocation(checkEventLocation(event));
+
         LocalDateTime eventDate;
         LocalDateTime checkStartDate = LocalDateTime.now().plusHours(2);
 
@@ -258,9 +267,31 @@ public class EventServiceImpl implements EventService {
                     "The date of the event cannot be earlier than in %s",
                     checkStartDate.format(Constant.DATE_TIME_FORMATTER)));
         }
-        Event event = eventRepository.save(EventMapper.toEvent(newEventDto, user, category, location));
-        return EventMapper.toEventFullDto(event);
+        return EventMapper.toEventFullDto(eventRepository.save(event));
+
     }
+
+    @Transactional
+    @Override
+    public List<EventShortDto> getEventsByLocation(long locId, String sort, int from, int size) {
+        Location location = check.checkAndGetLocation(locId);
+        List<Event> events = eventRepository.searchEventsByLocation(location.getLat(),
+                        location.getLon(),
+                        location.getRadius(),
+                        PageRequest.of(from / size, size))
+                .stream()
+                .collect(Collectors.toList());
+        SortParam finalSort;
+        finalSort = !isNull(sort) ? SortParam.fromStringToSort(sort)
+                .orElseThrow(() -> new ValidationException("Unknown sort: " + sort)) : SortParam.EVENT_DATE;
+        if (finalSort.equals(SortParam.EVENT_DATE)) {
+            events = events.stream()
+                    .sorted(Comparator.comparing(Event::getEventDate))
+                    .collect(Collectors.toList());
+        }
+        return getSortedList(events, finalSort);
+    }
+
 
     private void checkState(Event event, String action) {
         if (action.equalsIgnoreCase("update") &&
@@ -274,12 +305,12 @@ public class EventServiceImpl implements EventService {
     }
 
     private void setEventData(Event event,
-                               String annotation,
-                               Long categoryId,
-                               String description,
-                               Integer participantLimit,
-                               Boolean paid,
-                               String title) {
+                              String annotation,
+                              Long categoryId,
+                              String description,
+                              Integer participantLimit,
+                              Boolean paid,
+                              String title) {
         if (categoryId != null) {
             Category category = check.checkAndGetCategory(categoryId);
             event.setCategory(category);
@@ -300,5 +331,40 @@ public class EventServiceImpl implements EventService {
 
         Optional.ofNullable(title)
                 .ifPresent(event::setTitle);
+    }
+
+    private Location checkEventLocation(Event event) {
+        Location location = new Location();
+        if (event.getLocation() != null) {
+            float lat = event.getLocation().getLat();
+            float lon = event.getLocation().getLon();
+            location = locationRepository.findLocationByLatAndLon(lat, lon)
+                    .orElse(locationRepository.save(new Location(
+                            0L,
+                            lat,
+                            lon,
+                            isNull(event.getLocation().getRadius()) ? 0 : event.getLocation().getRadius(),
+                            event.getLocation().getName(),
+                            event.getLocation().getDescription(),
+                            isNull(event.getLocation().getType()) ?
+                                    TypeMapper.toType(new NewTypeDto("UNKNOWN TYPE"))
+                                    : event.getLocation().getType(),
+                            0F)));
+        }
+        return location;
+    }
+
+    private List<EventShortDto> getSortedList(List<Event> events, SortParam sort) {
+        List<EventShortDto> eventShortDtos = events.stream()
+                .filter(event -> event.getState().equals(State.PUBLISHED))
+                .map(EventMapper::toEventShortDto)
+                .map(viewsConfirmed::setConfirmedRequestsAndViewsEventShortDto)
+                .collect(Collectors.toList());
+        if (sort.equals(SortParam.VIEWS)) {
+            eventShortDtos = eventShortDtos.stream()
+                    .sorted(Comparator.comparing(EventShortDto::getViews))
+                    .collect(Collectors.toList());
+        }
+        return eventShortDtos;
     }
 }

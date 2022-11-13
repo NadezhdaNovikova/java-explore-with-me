@@ -1,4 +1,4 @@
-package ru.practicum.main_server.dto;
+package ru.practicum.main_server.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,11 +10,9 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
-
-    long id;
+@AllArgsConstructor
+public class NewUserRequest {
 
     @NotBlank
     private String name;

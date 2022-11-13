@@ -1,9 +1,9 @@
 package ru.practicum.main_server.dto.mapper;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.main_server.dto.NewUserRequest;
-import ru.practicum.main_server.dto.UserDto;
-import ru.practicum.main_server.dto.UserShortDto;
+import ru.practicum.main_server.dto.user.NewUserRequest;
+import ru.practicum.main_server.dto.user.UserDto;
+import ru.practicum.main_server.dto.user.UserShortDto;
 import ru.practicum.main_server.entity.User;
 
 @UtilityClass

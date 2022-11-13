@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.main_server.dto.NewUserRequest;
-import ru.practicum.main_server.dto.UserDto;
+import ru.practicum.main_server.dto.user.NewUserRequest;
+import ru.practicum.main_server.dto.user.UserDto;
 import ru.practicum.main_server.exception.EntityNotFoundException;
 import ru.practicum.main_server.service.UserService;
 

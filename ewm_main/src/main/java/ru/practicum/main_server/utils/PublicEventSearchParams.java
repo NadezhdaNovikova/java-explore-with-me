@@ -55,7 +55,7 @@ public class PublicEventSearchParams {
         }
         this.onlyAvailable = onlyAvailable;
         this.sort = !isNull(sort) ? SortParam.fromStringToSort(sort)
-                .orElseThrow(() -> new ValidationException("Unknown sort: " + sort)) : SortParam.VIEWS;
+                .orElseThrow(() -> new ValidationException("Unknown sort: " + sort)) : SortParam.EVENT_DATE;
         this.page = this.sort == SortParam.EVENT_DATE
                 ? PageRequest.of(from / size, size, Sort.Direction.ASC, "eventDate")
                 : PageRequest.of(from / size, size);
