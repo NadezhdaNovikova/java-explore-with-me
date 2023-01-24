@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main_server.dto.location.LocationDto;
 import ru.practicum.main_server.dto.location.LocationShortDto;
 import ru.practicum.main_server.dto.location.NewLocationDto;
+import ru.practicum.main_server.dto.location.UpdateLocationDto;
 import ru.practicum.main_server.dto.mapper.LocationMapper;
 import ru.practicum.main_server.entity.Location;
 import ru.practicum.main_server.entity.Type;
@@ -30,9 +31,10 @@ public class LocationServiceImpl implements LocationService {
 
     @Transactional
     @Override
-    public LocationShortDto update(LocationDto locationDto) {
+    public LocationShortDto update(UpdateLocationDto locationDto) {
         Location location = locationRepository.findById(locationDto.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Location not found"));
+        location.setType(check.checkAndGetType(locationDto.getType()));
         Optional.ofNullable(locationDto.getLat())
                 .ifPresent(location::setLat);
         Optional.ofNullable(locationDto.getLon())

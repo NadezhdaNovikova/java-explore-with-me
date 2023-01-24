@@ -64,9 +64,15 @@ public class CheckEntity {
                 new EntityNotFoundException(String.format("Location with id = '%d' not found", id)));
     }
 
-    public Type checkAndGetType(Long typeId) {
+    public Type checkAndGetType(long typeId) {
         return typeRepository.findById(typeId).orElseThrow(() ->
-                new EntityNotFoundException(String.format("LocationType with id = '%d' not found", typeId)));
+                new EntityNotFoundException(String.format("Type with id = '%d' not found", typeId)));
+    }
+
+    public void typeExistById(Long typeId) {
+        if (!typeRepository.existsById(typeId)) {
+            throw new EntityNotFoundException(String.format("Type with id = '%d' not found", typeId));
+        }
     }
 
     public void userExistById(Long userId) {

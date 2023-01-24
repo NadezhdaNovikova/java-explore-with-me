@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.main_server.dto.location.LocationDto;
 import ru.practicum.main_server.dto.location.LocationShortDto;
 import ru.practicum.main_server.dto.location.NewLocationDto;
+import ru.practicum.main_server.dto.location.UpdateLocationDto;
 import ru.practicum.main_server.service.LocationService;
 
 import javax.validation.Valid;
@@ -35,7 +36,7 @@ public class LocationAdminController {
     public List<LocationShortDto> getLocations(
             @RequestParam(value = "ids", required = false) List<Long> ids,
             @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-            @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+            @Positive @RequestParam(name = "size", defaultValue = "50") Integer size) {
         PageRequest pageable = PageRequest.of(from / size, size);
         if (ids == null) {
             log.info("Admin access: Get locations");
@@ -54,7 +55,7 @@ public class LocationAdminController {
 
     @PatchMapping("/{locationId}")
     public LocationShortDto update(@Positive @PathVariable("locationId") Long locationId,
-                              @Valid @RequestBody LocationDto locationDto) {
+                              @Valid @RequestBody UpdateLocationDto locationDto) {
         log.info("Admin access: Update location id = {}", locationId);
         return locationService.update(locationDto);
     }

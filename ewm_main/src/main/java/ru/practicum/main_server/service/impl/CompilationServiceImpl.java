@@ -24,7 +24,7 @@ import static java.util.Objects.isNull;
 
 @Service
 @RequiredArgsConstructor
-public class CompilationServiceImpl implements CompilationService {
+public class  CompilationServiceImpl implements CompilationService {
 
     private final CompilationRepository compilationRepository;
     private final ViewsAndConfirmedReq viewsConfirmed;
