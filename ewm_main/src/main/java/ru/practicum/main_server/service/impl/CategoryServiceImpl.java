@@ -1,6 +1,8 @@
 package ru.practicum.main_server.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,6 +10,7 @@ import ru.practicum.main_server.dto.category.CategoryDto;
 import ru.practicum.main_server.dto.category.NewCategoryDto;
 import ru.practicum.main_server.dto.mapper.CategoryMapper;
 import ru.practicum.main_server.entity.Category;
+import ru.practicum.main_server.exception.EntityAlreadyExistException;
 import ru.practicum.main_server.repository.CategoryRepository;
 import ru.practicum.main_server.service.CategoryService;
 import ru.practicum.main_server.utils.CheckEntity;
@@ -17,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
@@ -27,15 +31,29 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDto update(CategoryDto categoryDto) {
         Category category = check.checkAndGetCategory(categoryDto.getId());
         category.setName(categoryDto.getName());
-        return CategoryMapper.toCategoryDto(categoryRepository.save(category));
+        try {
+            return CategoryMapper.toCategoryDto(categoryRepository.save(category));
+        } catch (DataIntegrityViolationException e) {
+            throw new EntityAlreadyExistException(String.format("Category was name %s already exist",
+                    category.getName()));
+        }
     }
 
     @Transactional
     @Override
     public CategoryDto add(NewCategoryDto newCategoryDto) {
         Category category = CategoryMapper.toCategory(newCategoryDto);
-        return CategoryMapper.toCategoryDto(categoryRepository.save(category));
-    }
+        try {
+            category = categoryRepository.save(category);
+            log.info("CategoryServiceImpl: createCategory — category was added {}.", category);
+            return CategoryMapper.toCategoryDto(category);
+        } catch (DataIntegrityViolationException e) {
+            log.error("CategoryServiceImpl: createCategory — category was name {} already exist",
+                    category.getName());
+            throw new EntityAlreadyExistException(String.format("Category was name %s already exist",
+                    category.getName()));
+        }
+     }
 
     @Transactional
     @Override

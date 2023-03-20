@@ -86,7 +86,9 @@ public class EventServiceImpl implements EventService {
             event.setEventDate(LocalDateTime.parse(eventUpdateDto.getEventDate(),
                     Constant.DATE_TIME_FORMATTER));
         }
-        event.setLocation(checkEventLocation(event));
+        if (eventUpdateDto.getLocation() != null) {
+            event.setLocation(checkEventLocation(eventUpdateDto.getLocation()));
+        }
 
         Optional.ofNullable(eventUpdateDto.getRequestModeration())
                 .ifPresent(event::setRequestModeration);
@@ -251,7 +253,7 @@ public class EventServiceImpl implements EventService {
         }
 
         Event event = EventMapper.toEvent(newEventDto, user, category, location);
-        event.setLocation(checkEventLocation(event));
+        event.setLocation(checkEventLocation(event.getLocation()));
 
         LocalDateTime eventDate;
         LocalDateTime checkStartDate = LocalDateTime.now().plusHours(2);
@@ -333,22 +335,22 @@ public class EventServiceImpl implements EventService {
                 .ifPresent(event::setTitle);
     }
 
-    private Location checkEventLocation(Event event) {
+    private Location checkEventLocation(Location eventLocation) {
         Location location = new Location();
-        if (event.getLocation() != null) {
-            float lat = event.getLocation().getLat();
-            float lon = event.getLocation().getLon();
+        if (eventLocation != null) {
+            float lat = eventLocation.getLat();
+            float lon = eventLocation.getLon();
             location = locationRepository.findLocationByLatAndLon(lat, lon)
                     .orElse(locationRepository.save(new Location(
                             0L,
                             lat,
                             lon,
-                            isNull(event.getLocation().getRadius()) ? 0 : event.getLocation().getRadius(),
-                            event.getLocation().getName(),
-                            event.getLocation().getDescription(),
-                            isNull(event.getLocation().getType()) ?
+                            isNull(eventLocation.getRadius()) ? 0 : eventLocation.getRadius(),
+                            eventLocation.getName(),
+                            eventLocation.getDescription(),
+                            isNull(eventLocation.getType()) ?
                                     TypeMapper.toType(new NewTypeDto("UNKNOWN TYPE"))
-                                    : event.getLocation().getType(),
+                                    : eventLocation.getType(),
                             0F)));
         }
         return location;

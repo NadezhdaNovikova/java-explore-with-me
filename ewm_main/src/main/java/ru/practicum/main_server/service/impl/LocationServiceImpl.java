@@ -13,7 +13,6 @@ import ru.practicum.main_server.entity.Location;
 import ru.practicum.main_server.entity.Type;
 import ru.practicum.main_server.exception.EntityNotFoundException;
 import ru.practicum.main_server.repository.LocationRepository;
-import ru.practicum.main_server.repository.TypeRepository;
 import ru.practicum.main_server.service.LocationService;
 import ru.practicum.main_server.utils.CheckEntity;
 
@@ -26,7 +25,6 @@ import java.util.stream.Collectors;
 public class LocationServiceImpl implements LocationService {
 
     private final LocationRepository locationRepository;
-    private final TypeRepository typeRepository;
     private final CheckEntity check;
 
     @Transactional
