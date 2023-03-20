@@ -8,12 +8,14 @@
 
 ### _Схема Архитектуры проекта_
 
+
 ![Class Diagram](ewm_utils/src/main/resources/Arch_diagram.png)
 
 Приложение — афиша, где можно предложить какое-либо событие от выставки до похода в кино и набрать компанию для участия в нём.
 
 ### Спецификация:
 #### Основной сервис: https://github.com/NadezhdaNovikova/java-explore-with-me/blob/main/ewm-main-service-spec.json
+
 #### Сервис статистики: https://github.com/NadezhdaNovikova/java-explore-with-me/blob/main/ewm-stats-service-spec.json
 
 ### _Схема DB основного сервиса_
