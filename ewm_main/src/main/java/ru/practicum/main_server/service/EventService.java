@@ -1,11 +1,11 @@
 package ru.practicum.main_server.service;
 
 import org.springframework.data.domain.PageRequest;
-import ru.practicum.main_server.dto.AdminUpdateEventRequest;
-import ru.practicum.main_server.dto.EventFullDto;
-import ru.practicum.main_server.dto.EventShortDto;
-import ru.practicum.main_server.dto.NewEventDto;
-import ru.practicum.main_server.dto.UpdateEventRequest;
+import ru.practicum.main_server.dto.event.AdminUpdateEventRequest;
+import ru.practicum.main_server.dto.event.EventFullDto;
+import ru.practicum.main_server.dto.event.EventShortDto;
+import ru.practicum.main_server.dto.event.NewEventDto;
+import ru.practicum.main_server.dto.event.UpdateEventRequest;
 import ru.practicum.main_server.utils.AdminEventSearchParams;
 import ru.practicum.main_server.utils.PublicEventSearchParams;
 
@@ -44,4 +44,7 @@ public interface EventService {
 
     //Private: Получение полной информации о событии добавленном текущим пользователем
     EventFullDto getUserEvent(Long userId, Long eventId);
+
+    //Public: Получение списка событий в радиусе локации по ее id
+    List<EventShortDto> getEventsByLocation(long locId, String sort, int from, int size);
 }

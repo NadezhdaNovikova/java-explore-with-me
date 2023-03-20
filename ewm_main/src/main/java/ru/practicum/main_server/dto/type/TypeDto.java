@@ -1,4 +1,4 @@
-package ru.practicum.main_server.dto;
+package ru.practicum.main_server.dto.type;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,22 +6,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
-import java.util.List;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CompilationDto {
+public class TypeDto {
 
-    @NotBlank
+    @NotNull
     private Long id;
 
-    private List<EventShortDto> events;
-
     @NotBlank
-    private String title;
-
-    @NotBlank
-    private Boolean pinned;
+    private String name;
 }

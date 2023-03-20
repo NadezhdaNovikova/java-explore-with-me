@@ -2,8 +2,8 @@ package ru.practicum.main_server.utils;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.practicum.main_server.dto.EventFullDto;
-import ru.practicum.main_server.dto.EventShortDto;
+import ru.practicum.main_server.dto.event.EventFullDto;
+import ru.practicum.main_server.dto.event.EventShortDto;
 import ru.practicum.main_server.entity.enums.StatusRequest;
 import ru.practicum.main_server.repository.ParticipationRepository;
 

@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import ru.practicum.main_server.dto.CompilationDto;
-import ru.practicum.main_server.dto.NewCompilationDto;
+import ru.practicum.main_server.dto.compilation.CompilationDto;
+import ru.practicum.main_server.dto.compilation.NewCompilationDto;
 import ru.practicum.main_server.dto.mapper.CompilationMapper;
 import ru.practicum.main_server.dto.mapper.EventMapper;
 import ru.practicum.main_server.entity.Compilation;
@@ -24,7 +24,7 @@ import static java.util.Objects.isNull;
 
 @Service
 @RequiredArgsConstructor
-public class CompilationServiceImpl implements CompilationService {
+public class  CompilationServiceImpl implements CompilationService {
 
     private final CompilationRepository compilationRepository;
     private final ViewsAndConfirmedReq viewsConfirmed;
