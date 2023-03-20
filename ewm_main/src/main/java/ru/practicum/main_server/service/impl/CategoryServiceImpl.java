@@ -34,7 +34,7 @@ public class CategoryServiceImpl implements CategoryService {
         try {
             return CategoryMapper.toCategoryDto(categoryRepository.save(category));
         } catch (DataIntegrityViolationException e) {
-            throw new EntityAlreadyExistException(String.format("Category was name %s already exist",
+            throw new EntityAlreadyExistException(String.format("Category name %s is already exist",
                     category.getName()));
         }
     }
@@ -45,12 +45,12 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = CategoryMapper.toCategory(newCategoryDto);
         try {
             category = categoryRepository.save(category);
-            log.info("CategoryServiceImpl: createCategory — category was added {}.", category);
+            log.info("CategoryServiceImpl: add — category was added {}.", category);
             return CategoryMapper.toCategoryDto(category);
         } catch (DataIntegrityViolationException e) {
-            log.error("CategoryServiceImpl: createCategory — category was name {} already exist",
+            log.error("CategoryServiceImpl: add — category name {} is already exist",
                     category.getName());
-            throw new EntityAlreadyExistException(String.format("Category was name %s already exist",
+            throw new EntityAlreadyExistException(String.format("Category name %s is already exist",
                     category.getName()));
         }
      }
