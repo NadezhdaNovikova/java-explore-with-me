@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.main_server.dto.EventFullDto;
-import ru.practicum.main_server.dto.EventShortDto;
-import ru.practicum.main_server.dto.NewEventDto;
 import ru.practicum.main_server.dto.ParticipationRequestDto;
-import ru.practicum.main_server.dto.UpdateEventRequest;
+import ru.practicum.main_server.dto.event.EventFullDto;
+import ru.practicum.main_server.dto.event.EventShortDto;
+import ru.practicum.main_server.dto.event.NewEventDto;
+import ru.practicum.main_server.dto.event.UpdateEventRequest;
 import ru.practicum.main_server.service.EventService;
 import ru.practicum.main_server.service.ParticipationService;
 

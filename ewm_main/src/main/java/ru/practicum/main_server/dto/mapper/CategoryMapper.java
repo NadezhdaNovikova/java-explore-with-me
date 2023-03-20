@@ -1,8 +1,8 @@
 package ru.practicum.main_server.dto.mapper;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.main_server.dto.CategoryDto;
-import ru.practicum.main_server.dto.NewCategoryDto;
+import ru.practicum.main_server.dto.category.CategoryDto;
+import ru.practicum.main_server.dto.category.NewCategoryDto;
 import ru.practicum.main_server.entity.Category;
 
 @UtilityClass

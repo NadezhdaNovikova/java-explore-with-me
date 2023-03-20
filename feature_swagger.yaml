@@ -1,0 +1,958 @@
+openapi: 3.0.1
+info:
+  title: Main service API
+  version: '1.0'
+servers:
+  - description: Generated server url
+    url: http://localhost:8080
+tags:
+  - description: Публичный API для работы с локациями
+    name: 'Public: Локации'
+  - description: Публичный API для работы с типами локаций
+    name: 'Public: Типы локаций'
+  - description: API для работы с локациями
+    name: 'Admin: Локации'
+  - description: API для работы с типами локаций
+    name: 'Admin: Типы локаций'
+
+paths:
+  /admin/locations/types/{typeId}:
+    patch:
+      description: 'Обратите внимание: имя типа локации должно быть уникальным'
+      operationId: updateType
+      parameters:
+        - description: id типа локации
+          in: path
+          name: typeId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TypeDto'
+        description: Данные типа локации для изменения
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TypeDto'
+          description: Данные типа локации изменены
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Запрос составлен с ошибкой
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Не выполнены условия для совершения операции
+        '404':
+          content:
+            application/json:
+              example:
+                status: NOT_FOUND
+                reason: The required object was not found.
+                message: Event with id=21 was not found.
+                timestamp: '2022-09-07 09:10:50'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Объект не найден
+        '409':
+          content:
+            application/json:
+              example:
+                status: CONFLICT
+                reason: Integrity constraint has been violated
+                message: 'could not execute statement; SQL [n/a]; constraint [uq_category_name]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement'
+                timestamp: '2022-09-07 10:47:58'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Запрос приводит к нарушению целостности данных
+        '500':
+          content:
+            application/json:
+              example:
+                status: INTERNAL_SERVER_ERROR
+                reason: Error occurred
+                message: 'could not execute statement; SQL [n/a]; constraint [uq_category_name]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement'
+                timestamp: '2022-09-07 10:23:27'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Внутренняя ошибка сервера
+      summary: Изменение типа локации
+      tags:
+        - 'Admin: Типы локаций'
+    delete:
+      description: 'Обратите внимание: с типом локации не должно быть связано ни одной локации.'
+      operationId: deleteType
+      parameters:
+        - description: id типа локации
+          in: path
+          name: typeId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Тип локации удален
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Запрос составлен с ошибкой
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Не выполнены условия для совершения операции
+        '404':
+          content:
+            application/json:
+              example:
+                status: NOT_FOUND
+                reason: The required object was not found.
+                message: Event with id=21 was not found.
+                timestamp: '2022-09-07 09:10:50'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Объект не найден
+        '409':
+          content:
+            application/json:
+              example:
+                status: CONFLICT
+                reason: Integrity constraint has been violated
+                message: 'could not execute statement; SQL [n/a]; constraint [uq_category_name]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement'
+                timestamp: '2022-09-07 10:47:58'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Запрос приводит к нарушению целостности данных
+        '500':
+          content:
+            application/json:
+              example:
+                status: INTERNAL_SERVER_ERROR
+                reason: Error occurred
+                message: 'could not execute statement; SQL [n/a]; constraint [uq_category_name]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement'
+                timestamp: '2022-09-07 10:23:27'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Внутренняя ошибка сервера
+      summary: Удаление типа локации
+      tags:
+        - 'Admin: Типы локаций'
+  /admin/locations/types/:       
+    post:
+      description: 'Обратите внимание: имя типа локации должно быть уникальным'
+      operationId: addType
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewTypeDto'
+        description: данные добавляемого типа локации
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TypeDto'
+          description: Тип локации добавлен
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Запрос составлен с ошибкой
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Не выполнены условия для совершения операции
+        '404':
+          content:
+            application/json:
+              example:
+                status: NOT_FOUND
+                reason: The required object was not found.
+                message: Event with id=21 was not found.
+                timestamp: '2022-09-07 09:10:50'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Объект не найден
+        '409':
+          content:
+            application/json:
+              example:
+                status: CONFLICT
+                reason: Integrity constraint has been violated
+                message: 'could not execute statement; SQL [n/a]; constraint [uq_category_name]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement'
+                timestamp: '2022-09-07 10:47:58'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Запрос приводит к нарушению целостности данных
+        '500':
+          content:
+            application/json:
+              example:
+                status: INTERNAL_SERVER_ERROR
+                reason: Error occurred
+                message: 'could not execute statement; SQL [n/a]; constraint [uq_category_name]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement'
+                timestamp: '2022-09-07 10:23:27'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Внутренняя ошибка сервера
+      summary: Добавление нового типа локации
+      tags:
+        - 'Admin: Типы локаций'
+  /admin/locations:
+    get:
+      description: Возвращает информацию обо всех локациях (учитываются параметры ограничения выборки), либо о конкретных (учитываются указанные идентификаторы)
+      operationId: getLocations
+      parameters:
+        - description: id локаций
+          in: query
+          name: ids
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        - description: количество элементов, которые нужно пропустить для формирования текущего набора
+          in: query
+          name: from
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        - description: количество элементов в наборе
+          in: query
+          name: size
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LocationDto'
+          description: Локации найдены
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Запрос составлен с ошибкой
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Не выполнены условия для совершения операции
+        '404':
+          content:
+            application/json:
+              example:
+                status: NOT_FOUND
+                reason: The required object was not found.
+                message: Event with id=21 was not found.
+                timestamp: '2022-09-07 09:10:50'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Объект не найден
+        '409':
+          content:
+            application/json:
+              example:
+                status: CONFLICT
+                reason: Integrity constraint has been violated
+                message: 'could not execute statement; SQL [n/a]; constraint [uq_category_name]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement'
+                timestamp: '2022-09-07 10:47:58'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Запрос приводит к нарушению целостности данных
+        '500':
+          content:
+            application/json:
+              example:
+                status: INTERNAL_SERVER_ERROR
+                reason: Error occurred
+                message: 'could not execute statement; SQL [n/a]; constraint [uq_category_name]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement'
+                timestamp: '2022-09-07 10:23:27'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Внутренняя ошибка сервера
+      summary: Получение информации о локациях
+      tags:
+        - 'Admin: Локации'
+    post:
+      operationId: registerLocation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewLocationDto'
+        description: данные добавляемой локации
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationDto'
+          description: Локация добавлена
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Запрос составлен с ошибкой
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Не выполнены условия для совершения операции
+        '404':
+          content:
+            application/json:
+              example:
+                status: NOT_FOUND
+                reason: The required object was not found.
+                message: Event with id=21 was not found.
+                timestamp: '2022-09-07 09:10:50'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Объект не найден
+        '409':
+          content:
+            application/json:
+              example:
+                status: CONFLICT
+                reason: Integrity constraint has been violated
+                message: 'could not execute statement; SQL [n/a]; constraint [uq_category_name]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement'
+                timestamp: '2022-09-07 10:47:58'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Запрос приводит к нарушению целостности данных
+        '500':
+          content:
+            application/json:
+              example:
+                status: INTERNAL_SERVER_ERROR
+                reason: Error occurred
+                message: 'could not execute statement; SQL [n/a]; constraint [uq_category_name]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement'
+                timestamp: '2022-09-07 10:23:27'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Внутренняя ошибка сервера
+      summary: Добавление новой локации
+      tags:
+        - 'Admin: Локации' 
+  /admin/locations/{locId}:
+     patch:
+      operationId: updateLocation
+      parameters:
+        - description: id локации
+          in: path
+          name: locId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LocationDto'
+        description: данные изменяемой локации
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationDto'
+          description: Локация изменена
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Запрос составлен с ошибкой
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Не выполнены условия для совершения операции
+        '404':
+          content:
+            application/json:
+              example:
+                status: NOT_FOUND
+                reason: The required object was not found.
+                message: Event with id=21 was not found.
+                timestamp: '2022-09-07 09:10:50'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Объект не найден
+        '409':
+          content:
+            application/json:
+              example:
+                status: CONFLICT
+                reason: Integrity constraint has been violated
+                message: 'could not execute statement; SQL [n/a]; constraint [uq_category_name]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement'
+                timestamp: '2022-09-07 10:47:58'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Запрос приводит к нарушению целостности данных
+        '500':
+          content:
+            application/json:
+              example:
+                status: INTERNAL_SERVER_ERROR
+                reason: Error occurred
+                message: 'could not execute statement; SQL [n/a]; constraint [uq_category_name]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement'
+                timestamp: '2022-09-07 10:23:27'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Внутренняя ошибка сервера
+      summary: Изменение локации
+      tags:
+        - 'Admin: Локации'    
+  /locations/types/{typeId}:
+    get:
+      description: 'Получение информации о типе локации по id'
+      operationId: getType
+      parameters:
+        - description: id типа локации
+          in: path
+          name: typeId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TypeDto'
+          description: Данные типа локации получены
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Запрос составлен с ошибкой
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Не выполнены условия для совершения операции
+        '404':
+          content:
+            application/json:
+              example:
+                status: NOT_FOUND
+                reason: The required object was not found.
+                message: Event with id=21 was not found.
+                timestamp: '2022-09-07 09:10:50'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Объект не найден
+        '409':
+          content:
+            application/json:
+              example:
+                status: CONFLICT
+                reason: Integrity constraint has been violated
+                message: 'could not execute statement; SQL [n/a]; constraint [uq_category_name]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement'
+                timestamp: '2022-09-07 10:47:58'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Запрос приводит к нарушению целостности данных
+        '500':
+          content:
+            application/json:
+              example:
+                status: INTERNAL_SERVER_ERROR
+                reason: Error occurred
+                message: 'could not execute statement; SQL [n/a]; constraint [uq_category_name]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement'
+                timestamp: '2022-09-07 10:23:27'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Внутренняя ошибка сервера
+      summary: Получение информации о типе локации
+      tags:
+        - 'Public: Типы локаций'
+  /locations/types/:       
+    get:
+      description: 'Эндпоинт возвращает полную информацию обо всех типах локации'
+      operationId: getTypes
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TypeDto'
+          description: Типы локации найдены
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Запрос составлен с ошибкой
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Не выполнены условия для совершения операции
+        '404':
+          content:
+            application/json:
+              example:
+                status: NOT_FOUND
+                reason: The required object was not found.
+                message: Event with id=21 was not found.
+                timestamp: '2022-09-07 09:10:50'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Объект не найден
+        '409':
+          content:
+            application/json:
+              example:
+                status: CONFLICT
+                reason: Integrity constraint has been violated
+                message: 'could not execute statement; SQL [n/a]; constraint [uq_category_name]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement'
+                timestamp: '2022-09-07 10:47:58'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Запрос приводит к нарушению целостности данных
+        '500':
+          content:
+            application/json:
+              example:
+                status: INTERNAL_SERVER_ERROR
+                reason: Error occurred
+                message: 'could not execute statement; SQL [n/a]; constraint [uq_category_name]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement'
+                timestamp: '2022-09-07 10:23:27'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Внутренняя ошибка сервера
+      summary: Получение списка типов локации
+      tags:
+        - 'Public: Типы локаций'
+  /locations/{locId}:
+    get:
+      description: 'Получение списка событий в радиусе локации по ее Id'
+      operationId: getLocationEvents
+      parameters:
+        - description: id типа локации
+          in: path
+          name: locId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventShortDto'
+          description: События получены
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Запрос составлен с ошибкой
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Не выполнены условия для совершения операции
+        '404':
+          content:
+            application/json:
+              example:
+                status: NOT_FOUND
+                reason: The required object was not found.
+                message: Event with id=21 was not found.
+                timestamp: '2022-09-07 09:10:50'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Объект не найден
+        '409':
+          content:
+            application/json:
+              example:
+                status: CONFLICT
+                reason: Integrity constraint has been violated
+                message: 'could not execute statement; SQL [n/a]; constraint [uq_category_name]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement'
+                timestamp: '2022-09-07 10:47:58'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Запрос приводит к нарушению целостности данных
+        '500':
+          content:
+            application/json:
+              example:
+                status: INTERNAL_SERVER_ERROR
+                reason: Error occurred
+                message: 'could not execute statement; SQL [n/a]; constraint [uq_category_name]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement'
+                timestamp: '2022-09-07 10:23:27'
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Внутренняя ошибка сервера
+      summary: Получение списка событий в локации
+      tags:
+        - 'Public: Локации'
+components:
+  schemas:
+    ApiError:
+      type: object
+      properties:
+        errors:
+          type: array
+          description: Список стектрейсов или описания ошибок
+          example: []
+          items:
+            type: string
+            description: Список стектрейсов или описания ошибок
+            example: '[]'
+        message:
+          type: string
+          description: Сообщение об ошибке
+          example: Only pending or canceled events can be changed
+        reason:
+          type: string
+          description: Общее описание причины ошибки
+          example: For the requested operation the conditions are not met.
+        status:
+          type: string
+          description: Код статуса HTTP-ответа
+          example: FORBIDDEN
+          enum:
+            - 100 CONTINUE
+            - 101 SWITCHING_PROTOCOLS
+            - 102 PROCESSING
+            - 103 CHECKPOINT
+            - 200 OK
+            - 201 CREATED
+            - 202 ACCEPTED
+            - 203 NON_AUTHORITATIVE_INFORMATION
+            - 204 NO_CONTENT
+            - 205 RESET_CONTENT
+            - 206 PARTIAL_CONTENT
+            - 207 MULTI_STATUS
+            - 208 ALREADY_REPORTED
+            - 226 IM_USED
+            - 300 MULTIPLE_CHOICES
+            - 301 MOVED_PERMANENTLY
+            - 302 FOUND
+            - 302 MOVED_TEMPORARILY
+            - 303 SEE_OTHER
+            - 304 NOT_MODIFIED
+            - 305 USE_PROXY
+            - 307 TEMPORARY_REDIRECT
+            - 308 PERMANENT_REDIRECT
+            - 400 BAD_REQUEST
+            - 401 UNAUTHORIZED
+            - 402 PAYMENT_REQUIRED
+            - 403 FORBIDDEN
+            - 404 NOT_FOUND
+            - 405 METHOD_NOT_ALLOWED
+            - 406 NOT_ACCEPTABLE
+            - 407 PROXY_AUTHENTICATION_REQUIRED
+            - 408 REQUEST_TIMEOUT
+            - 409 CONFLICT
+            - 410 GONE
+            - 411 LENGTH_REQUIRED
+            - 412 PRECONDITION_FAILED
+            - 413 PAYLOAD_TOO_LARGE
+            - 413 REQUEST_ENTITY_TOO_LARGE
+            - 414 URI_TOO_LONG
+            - 414 REQUEST_URI_TOO_LONG
+            - 415 UNSUPPORTED_MEDIA_TYPE
+            - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+            - 417 EXPECTATION_FAILED
+            - 418 I_AM_A_TEAPOT
+            - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+            - 420 METHOD_FAILURE
+            - 421 DESTINATION_LOCKED
+            - 422 UNPROCESSABLE_ENTITY
+            - 423 LOCKED
+            - 424 FAILED_DEPENDENCY
+            - 425 TOO_EARLY
+            - 426 UPGRADE_REQUIRED
+            - 428 PRECONDITION_REQUIRED
+            - 429 TOO_MANY_REQUESTS
+            - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+            - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+            - 500 INTERNAL_SERVER_ERROR
+            - 501 NOT_IMPLEMENTED
+            - 502 BAD_GATEWAY
+            - 503 SERVICE_UNAVAILABLE
+            - 504 GATEWAY_TIMEOUT
+            - 505 HTTP_VERSION_NOT_SUPPORTED
+            - 506 VARIANT_ALSO_NEGOTIATES
+            - 507 INSUFFICIENT_STORAGE
+            - 508 LOOP_DETECTED
+            - 509 BANDWIDTH_LIMIT_EXCEEDED
+            - 510 NOT_EXTENDED
+            - 511 NETWORK_AUTHENTICATION_REQUIRED
+        timestamp:
+          type: string
+          description: Дата и время когда произошла ошибка (в формате "yyyy-MM-dd HH:mm:ss")
+          example: '2022-06-09 06:27:23'
+      description: Сведения об ошибке
+    TypeDto:
+      required:
+        - id
+        - name
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Идентификатор типа локации
+          format: int64
+          example: 1
+        name:
+          type: string
+          description: Название типа локации
+          example: Города
+      description: Типы локации
+    NewTypeDto:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: Название типа локации
+          example: Города
+      description: Данные для добавления нового типа локации
+    NewLocationDto:
+      required:
+        - lat
+        - lon
+      type: object
+      properties:
+        name:
+          type: string
+          description: Название локации
+          example: Концертный зал Коты весной
+        description:
+          type: string
+          description: Описание локации, в том числе как добраться
+          example: Координаты навигатора 22.123456, 54.12044 Доставка на концерт организатором мероприятия на автобусе от ДК Сосенки
+        lat:
+          type: number
+          description: Широта места проведения события
+          format: float
+          example: 55.754167
+        lon:
+          type: number
+          description: Долгота места проведения события
+          format: float
+          example: 37.62
+        radius:
+          type: number
+          description: Радиус локации, в которой администратор может администрировать события
+          format: float
+          example: 37.62
+        type:
+          type: integer
+          description: Тип категории
+          format: int64
+          example: 3
+    LocationDto:
+      required:
+        - id
+        - name
+        - description
+        - lat
+        - lon
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Идентификатор
+          format: int64
+          example: 3
+        name:
+          type: string
+          description: Название локации
+          example: Концертный зал Коты весной
+        description:
+          type: string
+          description: Описание локации, в том числе как добраться
+          example: Координаты навигатора 22.123456, 54.12044 Доставка на концерт организатором мероприятия на автобусе от ДК Сосенки
+        lat:
+          type: number
+          description: Широта места проведения события
+          format: float
+          example: 55.754167
+        lon:
+          type: number
+          description: Долгота места проведения события
+          format: float
+          example: 37.62
+        radius:
+          type: number
+          description: Радиус локации, в которой администратор может администрировать события
+          format: float
+          example: 37.62
+        type:
+          type: integer
+          description: Тип локации
+          format: int64
+          example: 3
+        distance:
+          type: number
+          description: Расстояние до локации от точки поиска
+          format: float
+          example: 37.62
+    EventShortDto:
+      required:
+        - annotation
+        - category
+        - eventDate
+        - initiator
+        - paid
+        - title
+      type: object
+      properties:
+        annotation:
+          type: string
+          description: Краткое описание
+          example: >-
+            Эксклюзивность нашего шоу гарантирует привлечение максимальной
+            зрительской аудитории
+        category:
+          $ref: '#/components/schemas/CategoryDto'
+        confirmedRequests:
+          type: integer
+          description: Количество одобренных заявок на участие в данном событии
+          format: int64
+          example: 5
+        eventDate:
+          type: string
+          description: >-
+            Дата и время на которые намечено событие (в формате "yyyy-MM-dd
+            HH:mm:ss")
+          example: '2024-12-31 15:10:05'
+        id:
+          type: integer
+          description: Идентификатор
+          format: int64
+          example: 1
+        initiator:
+          $ref: '#/components/schemas/UserShortDto'
+        paid:
+          type: boolean
+          description: Нужно ли оплачивать участие
+          example: true
+        title:
+          type: string
+          description: Заголовок
+          example: Знаменитое шоу 'Летающая кукуруза'
+        views:
+          type: integer
+          description: Количество просмотрев события
+          format: int64
+          example: 999
+      description: Краткая информация о событии
+      example:
+        - annotation: >-
+            Эксклюзивность нашего шоу гарантирует привлечение максимальной
+            зрительской аудитории
+          category:
+            id: 1
+            name: Концерты
+          confirmedRequests: 5
+          eventDate: '2024-03-10 14:30:00'
+          id: 1
+          initiator:
+            id: 3
+            name: Фёдоров Матвей
+          paid: true
+          title: Знаменитое шоу 'Летающая кукуруза'
+          views: 999
+        - annotation: >-
+            За почти три десятилетия группа 'Java Core' закрепились на сцене как
+            группа, объединяющая поколения.
+          category:
+            id: 1
+            name: Концерты
+          confirmedRequests: 555
+          eventDate: '2025-09-13 21:00:00'
+          id: 1
+          initiator:
+            id: 3
+            name: Паша Петров
+          paid: true
+          title: Концерт рок-группы 'Java Core'
+          views: 991
+    CategoryDto:
+      required:
+        - id
+        - name
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Идентификатор категории
+          format: int64
+          example: 1
+        name:
+          type: string
+          description: Название категории
+          example: Концерты
+      description: Категория
+    UserShortDto:
+      required:
+        - id
+        - name
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Идентификатор
+          format: int64
+          example: 3
+        name:
+          type: string
+          description: Имя
+          example: Фёдоров Матвей
+      description: Пользователь (краткая информация)
